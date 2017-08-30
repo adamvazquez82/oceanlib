@@ -28,6 +28,8 @@ class Assistant(Gtk.Window):
     def __init__(self,title="Assistant",init_sub_title="",pages=[]):
         #call the super class's constructor
         Gtk.Window.__init__(self,title=title)
+        #set the pages property of this class to the pages argument passed to the constructor (if any)
+        self.pages = pages
         #define a default size for the window
         self.set_default_size(520,480)
         #set a border width of 10 so that items are spaced correctly
@@ -36,7 +38,7 @@ class Assistant(Gtk.Window):
         self.header = Gtk.HeaderBar()
         #make sure that the title bar contains a close button
         self.header.set_show_close_button(True)
-        set the title of the titlebar to match the window title
+        #set the title of the titlebar to match the window title
         self.header.set_title(title)
         #set the initial sub title of the assistant (this may change depending on what page is showing)
         self.header.set_subtitle(init_sub_title)
