@@ -25,11 +25,13 @@ from gi.repository import Gtk
 #create a class called assistant to assist the user in achieving a particular task
 class Assistant(Gtk.Window):
     #define the initialisation function to initialise the window and add the widgets
-    def __init__(self,title="Assistant",init_sub_title="",pages=[]):
+    def __init__(self,title="Assistant",init_sub_title="",page_names=[],pages=[]):
         #call the super class's constructor
         Gtk.Window.__init__(self,title=title)
         #set the pages property of this class to the pages argument passed to the constructor (if any)
         self.pages = pages
+        #set the names property of this class to the page_names argument passed to the constructor (if any)
+        self.names = page_names
         #define a default size for the window
         self.set_default_size(520,480)
         #set a border width of 10 so that items are spaced correctly
@@ -107,5 +109,8 @@ class Assistant(Gtk.Window):
         self.notebook = Gtk.Notebook()
         #make the notebook tabs invisible (we will control the navigation of the notebook through the navigation buttons instead)
         self.notebook.set_show_tabs(False)
+        #loop through the pages passed as input to the constructer (if any) and append them to the notebook
+        for name,page in self.names,self.pages:
+            self.notebook.append_page(page,Gtk.Label(name))
         #add the self.notebook object to the main window
         self.add(self.notebook)
