@@ -32,6 +32,8 @@ class Assistant(Gtk.Window):
         self.pages = pages
         #set the names property of this class to the page_names argument passed to the constructor (if any)
         self.names = page_names
+        #start the current_page variable at 0 by default
+        self.current_page = 0
         #define a default size for the window
         self.set_default_size(520,480)
         #set a border width of 10 so that items are spaced correctly
@@ -72,6 +74,8 @@ class Assistant(Gtk.Window):
         self.header.pack_start(self.back_forward)
         #create the back button to navigate backwards
         self.back_button = Gtk.Button()
+        #connect the back button to the change_page function, passing -1 as the number of pages to change so that we go back 1 page
+        self.back_button.connect("clicked",self.change_page,-1)
         #add a Gtk.Arrow to the button to symbolise moving backwards
         self.back_button.add(Gtk.Arrow(Gtk.ArrowType.LEFT))
         #define a back_label to be used to activate the button based on a mnemonic. This is also used to give screen readers a description of what the button does
@@ -80,14 +84,12 @@ class Assistant(Gtk.Window):
         self.back_label.set_text_with_mnemonic("_back")
         #set the widget to activate when the mnemonic is used to be the back_button
         self.back_label.set_mnemonic_widget(self.back_button)
-        #make sure the label is invisible (we only want it to be used to activate and describe the button)
-        self.back_label.set_visible(False)
-        #add this label to the back_button
-        self.back_button.add(self.back_label)
         #finally, pack the back_button object into the back_forward box
         self.back_forward.pack_start(self.back_button,False,False,0)
         #define the forward_button
         self.forward_button = Gtk.Button()
+        #connect the forward button to the change_page function
+        self.forward_button.connect("clicked",self.change_page,1)
         #add an arrow to it
         self.forward_button.add(Gtk.Arrow(Gtk.ArrowType.RIGHT))
         #define the forward_label
@@ -96,10 +98,7 @@ class Assistant(Gtk.Window):
         self.forward_label.set_text_with_mnemonic("_next")
         #set the mnemonic widget (widget to be activated) by the forward_label
         self.forward_label.set_mnemonic_widget(self.forward_button)
-        #make the label invisible
         self.forward_label.set_visible(False)
-        #add the label to the button
-        self.forward_button.add(self.forward_label)
         #pack the forward button into the back_forward box
         self.back_forward.pack_start(self.forward_button,False,False,0)
     
@@ -110,7 +109,13 @@ class Assistant(Gtk.Window):
         #make the notebook tabs invisible (we will control the navigation of the notebook through the navigation buttons instead)
         self.notebook.set_show_tabs(False)
         #loop through the pages passed as input to the constructer (if any) and append them to the notebook
-        for name,page in self.names,self.pages:
-            self.notebook.append_page(page,Gtk.Label(name))
+        if len(self.names) >0 and len(self.pages) > 0:
+            for i in range(0,len(self.names)-1):
+                self.notebook.append_page(self.pages[i],Gtk.Label(self.names[i]))
         #add the self.notebook object to the main window
         self.add(self.notebook)
+    
+    #define a function to go forward or back to a specific page
+    def change_page(self,widget,num=1):
+        self.current_page += num
+        self.notebook.set_current_page(self.current_page)
