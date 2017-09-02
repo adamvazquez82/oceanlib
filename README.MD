@@ -1,4 +1,5 @@
-# oceanlib ## a collection of classes to make PyGObject application
+# oceanlib 
+## a collection of classes to make PyGObject application
 developement easier and to simplify complicated gtk tasks
 
 ### Introduction
